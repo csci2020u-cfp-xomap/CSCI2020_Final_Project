@@ -17,6 +17,14 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/*
+Basic login/register page for chatter application by Owen Reid - 03/21/2020
+This program will display the user interface the user will
+see when they launch the application and it will allow the user
+to login and register with the application.
+
+No functionality, just the interface
+ */
 public class Main extends Application {
 
     @Override
@@ -25,14 +33,12 @@ public class Main extends Application {
 
     }
 
+    // The first page users will see when the application launches
     private void homepage(Stage primaryStage) {
+
         DropShadow dropShadow = new DropShadow();
         dropShadow.setOffsetX(5);
         dropShadow.setOffsetY(5);
-
-        Text scenetitle = new Text("Chatter");
-        scenetitle.setFont(Font.font("Tahoma", FontWeight.BOLD, 30));
-        scenetitle.setEffect(dropShadow);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -40,6 +46,9 @@ public class Main extends Application {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
+        Text scenetitle = new Text("Chatter");
+        scenetitle.setFont(Font.font("Tahoma", FontWeight.BOLD, 30));
+        scenetitle.setEffect(dropShadow);
         grid.add(scenetitle, 1, 0, 2, 1);
 
         Button loginbtn = new Button("Login");
@@ -62,7 +71,9 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    // The page users will use to log in to accounts already registered with the application
     private void loginpage(Stage primaryStage) {
+
         primaryStage.hide();
         Stage loginstage = new Stage();
         GridPane grid = new GridPane();
@@ -101,6 +112,7 @@ public class Main extends Application {
         loginstage.setScene(scene2);
         loginstage.show();
 
+        // Button allows user to return to home page if mistake has been made
         gobackbtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
                 loginstage.hide();
@@ -110,6 +122,7 @@ public class Main extends Application {
 
     }
 
+    // The page users will go to if they need a to register a new account with the application
     private void registerpage(Stage primaryStage) {
         primaryStage.hide();
         Stage registerstage = new Stage();
