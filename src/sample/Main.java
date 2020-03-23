@@ -10,6 +10,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -46,10 +48,14 @@ public class Main extends Application {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        Text scenetitle = new Text("Chatter");
-        scenetitle.setFont(Font.font("Tahoma", FontWeight.BOLD, 30));
-        scenetitle.setEffect(dropShadow);
-        grid.add(scenetitle, 1, 0, 2, 1);
+        Image logo = new Image("images/Chatter.png");
+        ImageView logoView = new ImageView(logo);
+
+        logoView.setEffect(dropShadow);
+        logoView.setFitHeight(200);
+        logoView.setFitWidth(200);
+
+        grid.add(logoView, 1, 0, 2, 1);
 
         Button loginbtn = new Button("Login");
         HBox hbBtn = new HBox(10);
