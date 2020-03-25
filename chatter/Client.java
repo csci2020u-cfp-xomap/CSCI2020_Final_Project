@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.net.InetAddress;
 import javafx.collections.FXCollections;
@@ -28,9 +29,12 @@ public class Client implements Runnable {
 
     public String username;
     public ObservableList<String> chatLog;
+    public ObservableList<String> userList;
 
     public Client() throws IOException {
         chatLog = FXCollections.observableArrayList();
+        userList = FXCollections.observableArrayList();
+        userList.add("initial test");
         //clientGUI =
         initialize();
     }
@@ -56,18 +60,22 @@ public class Client implements Runnable {
         outputStream = new ObjectOutputStream(chatSocket.getOutputStream());
         inputStream = new ObjectInputStream(chatSocket.getInputStream());
     }
+
     public void sendString(String message) throws IOException {
         Input string = new Input();
         string.setType(Input.inputType.TEXT);
         string.setString(message);
         outputStream.writeObject(string);
         outputStream.flush();
-        System.out.println("sent");
+        System.out.println("sent message");
     }
     public void displayString(Input input){
         Platform.runLater(() -> chatLog.add(input.getString()));
-
     }
+    public void updateUserlist(Input input){
+        userList = FXCollections.observableArrayList(input.getUserlist());
+    }
+
     @Override
     public void run() {
         System.out.println("listening");
@@ -86,6 +94,8 @@ public class Client implements Runnable {
                     switch (input.getType()) {
                         case TEXT:
                             displayString(input);
+                        case USERLIST:
+                            updateUserlist(input);
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {

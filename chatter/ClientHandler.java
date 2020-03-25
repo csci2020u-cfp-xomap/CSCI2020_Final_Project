@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class ClientHandler implements Runnable {
 
     public Socket client;
+    public String username;
     private Server server;
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
@@ -25,7 +26,12 @@ public class ClientHandler implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        try {
+            server.updateClientlist();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        while (client.isConnected()) {
             System.out.println("listening");
             Input input =null;
             try {
@@ -40,9 +46,16 @@ public class ClientHandler implements Runnable {
                             break;
                     }
                 }
+                //means the socket is closed PROBABLY OR THERE'S SOME OTHER ERROR ಥ_ಥ
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-                input = null;
+                System.out.println(client+": connection closed");
+                try {
+                    server.updateClientlist(this);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                //terminate thread
+                return;
             }
         }
     }

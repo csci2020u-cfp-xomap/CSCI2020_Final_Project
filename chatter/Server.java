@@ -45,16 +45,45 @@ public class Server {
         {
             Socket client = socket.accept();
             System.out.println("New client: " + client.getRemoteSocketAddress());
-            System.out.println("Total clients: " + clientList.size());
             //start thread for new client
             ClientHandler handler = new ClientHandler(client,this);
             clientList.add(handler);
             Thread t = new Thread(handler);
             t.start();
+            System.out.println("Total clients: " + clientList.size());
+
+        }
+    }
+    public void updateClientlist(ClientHandler handler) throws IOException {
+        clientList.remove(handler);
+        pushUserList();
+    }
+    public void updateClientlist() throws IOException {
+        pushUserList();
+    }
+
+
+        public void pushUserList() throws IOException {
+        ArrayList<String> userList = new ArrayList<String>();
+        userList.add("new test");
+        Iterator<ClientHandler> clientlist=clientList.iterator();
+        while(clientlist.hasNext()){
+            ClientHandler handler = clientlist.next();
+            userList.add("test");
+            System.out.println("test");
+        }
+        if (userList!=null){
+
+            Input input = new Input();
+        input.setType(Input.inputType.USERLIST);
+        input.setUserlist(userList);
+        pushInput(input);}
+        else {
+            System.out.print("userlist is null");
         }
     }
 
-    //handler for output stream to console, for other applications handle outputstream directly
+    //handler for output stream CALL THIS FOR EVERYTHING
     public synchronized void pushInput(Input input) throws IOException {
         Iterator<ClientHandler> clientlist=clientList.iterator();
         while(clientlist.hasNext())
@@ -68,7 +97,6 @@ public class Server {
                 outputStream.reset();
                 outputStream.flush();
                 System.out.println("pushed message");
-
             }
         }
     }
