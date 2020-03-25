@@ -12,8 +12,8 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -43,6 +43,7 @@ public class Main extends Application {
         dropShadow.setOffsetY(5);
 
         GridPane grid = new GridPane();
+        grid.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, CornerRadii.EMPTY, Insets.EMPTY)));
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -72,7 +73,7 @@ public class Main extends Application {
         registerbtn.setOnAction(e -> registerpage(primaryStage));
 
         primaryStage.setTitle("Home Page");
-        Scene scene = new Scene(grid, 300, 275);
+        Scene scene = new Scene(grid, 300, 275, Color.LIGHTPINK);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
@@ -83,6 +84,7 @@ public class Main extends Application {
         primaryStage.hide();
         Stage loginstage = new Stage();
         GridPane grid = new GridPane();
+        grid.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, CornerRadii.EMPTY, Insets.EMPTY)));
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -114,7 +116,7 @@ public class Main extends Application {
         grid.add(gobackbutton, 1, 3);
 
         loginstage.setTitle("Login Page");
-        Scene scene2 = new Scene(grid, 300, 275);
+        Scene scene2 = new Scene(grid, 300, 275, Color.LIGHTPINK);
         loginstage.setScene(scene2);
         loginstage.show();
 
@@ -133,6 +135,7 @@ public class Main extends Application {
         primaryStage.hide();
         Stage registerstage = new Stage();
         GridPane grid = new GridPane();
+        grid.setBackground(new Background(new BackgroundFill(Color.LIGHTPINK, CornerRadii.EMPTY, Insets.EMPTY)));
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -177,7 +180,7 @@ public class Main extends Application {
         grid.add(gobackbutton, 1, 4);
 
         registerstage.setTitle("Registration Page");
-        Scene scene3 = new Scene(grid, 500, 275);
+        Scene scene3 = new Scene(grid, 500, 275, Color.LIGHTPINK);
         registerstage.setScene(scene3);
         registerstage.show();
 
