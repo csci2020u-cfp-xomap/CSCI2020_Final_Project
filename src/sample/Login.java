@@ -3,10 +3,8 @@ package sample;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -14,9 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /*
@@ -27,7 +22,7 @@ to login and register with the application.
 
 No functionality, just the interface
  */
-public class Main extends Application {
+public class Login extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -89,7 +84,7 @@ public class Main extends Application {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        Label userName = new Label("User Name:");
+        Label userName = new Label("sample.User Name:");
         grid.add(userName, 0, 1);
 
         TextField userTextField = new TextField();
@@ -153,7 +148,7 @@ public class Main extends Application {
         DatePicker birthdate = new DatePicker();
         grid.add(birthdate, 1, 1);
 
-        Label UserName = new Label("User Name:");
+        Label UserName = new Label("sample.User Name:");
         grid.add(UserName, 0, 2);
 
         TextField UserTextField = new TextField();
@@ -183,6 +178,15 @@ public class Main extends Application {
         Scene scene3 = new Scene(grid, 500, 275, Color.LIGHTPINK);
         registerstage.setScene(scene3);
         registerstage.show();
+
+        registerbtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                User newuser = new User(UserTextField.getText(), pwBox.getText());
+                // TO DO: SEND USER OBJECT TO SERVER
+
+            }
+        });
 
         gobackbtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override public void handle(ActionEvent e) {
