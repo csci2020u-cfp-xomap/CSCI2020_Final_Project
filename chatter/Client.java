@@ -94,8 +94,10 @@ public class Client implements Runnable {
                     switch (input.getType()) {
                         case TEXT:
                             displayString(input);
+                            break;
                         case USERLIST:
                             updateUserlist(input);
+                            break;
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {
