@@ -1,4 +1,4 @@
-package sample;
+package util;
 
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import util.User;
 
 /*
 Basic login/register page for chatter application by Owen Reid - 03/21/2020

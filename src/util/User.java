@@ -1,4 +1,4 @@
-package sample;
+package util;
 
 import java.util.ArrayList;
 import org.mindrot.jbcrypt.*;
