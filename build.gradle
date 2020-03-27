@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-
->>>>>>> master
->>>>>>> v1-database
-def currentOS = OperatingSystem.current()
+def currentOS = org.gradle.internal.os.OperatingSystem.current()
 def platform
 if (currentOS.isWindows()) {
     platform = 'win'
@@ -13,20 +6,10 @@ if (currentOS.isWindows()) {
     platform = 'linux'
 } else if (currentOS.isMacOsX()) {
     platform = 'mac'
-<<<<<<< HEAD
-=======
 }
 
 subprojects {
     apply plugin: 'java'
-<<<<<<< HEAD
-=======
->>>>>>> master
-}
-
-subprojects {
-    apply plugin: 'java'
->>>>>>> v1-database
     apply plugin: 'idea'
 }
 
@@ -72,6 +55,11 @@ project(':client') {
                 include 'Client/**'
                 include 'util/**'
             }
+            resources {
+                srcDir '../src'
+                include 'Client/**'
+                include 'Client/images/**'
+            }
         }
     }
 
@@ -81,6 +69,11 @@ project(':client') {
 
     dependencies {
         compile group: 'org.mindrot', name: 'jbcrypt', version: '0.4'
+        compile 'com.jfoenix:jfoenix:9.0.8'
+        compile "org.openjfx:javafx-base:11:${platform}"
+        compile "org.openjfx:javafx-graphics:11:${platform}"
+        compile "org.openjfx:javafx-controls:11:${platform}"
+        compile "org.openjfx:javafx-fxml:11:${platform}"
     }
 
     jar {

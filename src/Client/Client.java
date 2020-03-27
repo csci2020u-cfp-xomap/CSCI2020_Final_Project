@@ -1,22 +1,18 @@
-package client;
+package Client;
 
 
 import javafx.collections.ObservableList;
+import javafx.stage.FileChooser;
+import javafx.collections.FXCollections;
+import javafx.application.Platform;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.net.InetAddress;
 
 import java.util.ArrayList;
-import java.net.InetAddress;
-import javafx.collections.FXCollections;
-
-import javafx.application.Platform;
-
-import util.Input;
-
-import javafx.stage.FileChooser;
-
+import util.*;
 
 public class Client implements Runnable {
 
@@ -24,7 +20,7 @@ public class Client implements Runnable {
     public Socket chatSocket;
     public ObjectInputStream inputStream;
 
-    private int port = 8080;
+    private int port = SocketSettings.getPort();
     public InetAddress host = InetAddress.getLocalHost();
     public ClientGUI clientGUI;
 
@@ -33,10 +29,28 @@ public class Client implements Runnable {
     public ObservableList<String> userList;
     private ClientViewController controller;
 
+    private User currentuser;
+    private ArrayList<User> allUsers;
+    private Channel currentchannel;
+    private ArrayList<Message> messages;
+    private ArrayList<User> channelUsers;
+    private ArrayList<Channel> userChannels;
 
     public Client() throws IOException {
         chatLog = FXCollections.observableArrayList();
         userList = FXCollections.observableArrayList();
+        currentuser = null;
+        currentchannel = null;
+        userList.add("initial test");
+        initialize();
+    }
+    public Client(String host, int port) throws IOException {
+        this.host = InetAddress.getByName(host);
+        this.port = port;
+        chatLog = FXCollections.observableArrayList();
+        userList = FXCollections.observableArrayList();
+        currentuser = null;
+        currentchannel = null;
         userList.add("initial test");
         initialize();
     }
@@ -62,64 +76,106 @@ public class Client implements Runnable {
         outputStream = new ObjectOutputStream(chatSocket.getOutputStream());
         inputStream = new ObjectInputStream(chatSocket.getInputStream());
     }
+
+    public User getCurrentUser() {
+        return this.currentuser;
+    }
+
+    public Channel getCurrentChannel() {
+        return this.currentchannel;
+    }
+
     public void setController(ClientViewController controller){
         this.controller = controller;
     }
 
-    public void sendString(String message) throws IOException {
-        Input string = new Input();
-        string.setType(Input.inputType.TEXT);
-        string.setString(message);
-        outputStream.writeObject(string);
-        outputStream.flush();
-        System.out.println("sent message");
-    }
-    public void displayString(Input input){
-        Platform.runLater(() -> chatLog.add(input.getString()));
-    }
-
-    //assumes utf-8 encoding, size<16mb
-    public Input writeFileToBytes(String filename) throws FileNotFoundException {
-        Input input = new Input();
-        File file = new File(filename);
-        FileInputStream fis = new FileInputStream(file);
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        byte[] buffer = new byte[16384];
-        int n;
-
+    public void register(Input reginput) {
         try {
-            while ((n = fis.read(buffer, 0, buffer.length)) != -1) {
-                bos.write(buffer, 0, n);
-                System.out.println("sent " + n + " bytes to output");
-            }
-        } catch (IOException ex) {
+            outputStream.writeObject(reginput);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        byte[] bytes = bos.toByteArray();
-        input.setType(Input.inputType.FILE);
-        input.setFile(bytes, file.getName());
-        return input;
-    }
-    public void sendFile(File filename) throws IOException {
-        outputStream.writeObject(writeFileToBytes(filename.getAbsolutePath()));
-        outputStream.flush();
-        System.out.println("sent file as byte array");
+
     }
 
-    //assumes utf-8 encoding, size<16mb
-    public void readFileFromBytes(Input input, File selectedFile) throws IOException {
-        FileOutputStream fos = new FileOutputStream(selectedFile);
-        fos.write(input.getByteArray());
-        fos.flush();
-        fos.close();
+    public void login(Input loginput) {
+        try {
+            outputStream.writeObject(loginput);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void updateUserlist(Input input){
-        userList.clear();
-        ArrayList list = input.getUserlist();
-        for(int i = 0; i < list.size(); i++)
-        {
-            System.out.println(list.get(i));
-        };
+    public void getAllUsers() {
+        try {
+            Input allusers = new Input("getAllUsers");
+            outputStream.writeObject(allusers);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMessage(Message newmessage) {
+        try {
+            Input postmessages = new Input("postMessage");
+            outputStream.writeObject(postmessages);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getMessagesForChannel() {
+        try {
+            Input getmessages = new Input("getMessages");
+            outputStream.writeObject(getmessages);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getUsersForChannel() {
+        try {
+            Input getusers = new Input("getUsers");
+            outputStream.writeObject(getusers);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getChannelsForUser() {
+        try {
+            Input getchannels = new Input("getChannels");
+            outputStream.writeObject(getchannels);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addToChannel() {
+        try {
+            Input addtochannel = new Input("addToChannel");
+            outputStream.writeObject(addtochannel);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeFromChannel() {
+        try {
+            Input removefromchannel = new Input("removeFromChannel");
+            outputStream.writeObject(removefromchannel);
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -133,37 +189,52 @@ public class Client implements Runnable {
                 e.printStackTrace();
             }
             Input input=null;
-
             try {
-                input = (Input) inputStream.readObject();
-                if(input!=null) {
-                    switch (input.getType()) {
-                        case TEXT:
-                            displayString(input);
+                input = (Input)inputStream.readObject();
+                if (input != null) {
+                    System.out.println("received data");
+                    switch (input.getOperation()) {
+                        case "res-register":
+                            this.currentuser = input.getUser();
+                            System.out.println("received");
                             break;
-                        case USERLIST:
-                            System.out.println("hello why is this running");
-                            updateUserlist(input);
-                            break;
-                        case FILE:
-                            System.out.println("received file "+input.getFilename());
-                            Input finalInput = input;
-                            //run on fx thread
-                            Platform.runLater(() -> {
-                                try {
-                                    controller.receivedFile(finalInput);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                            break;
+                        case "res-login":
+                            this.currentuser = input.getUser();
 
+                            break;
+                        case "res-getAllUsers":
+                            this.allUsers = input.getUserList();
+                            break;
+                        case "res-getMessagesForChannel":
+                            //update messages for a channel in channels here
+                            this.messages = input.getMessageList();
+                            break;
+                        case "res-getUsersForChannel":
+                            // use this userlist to display in the side bar
+                            this.channelUsers = input.getUserList();
+                            break;
+                        case "res-getChannelsForUser":
+                            // display channels on the side
+                            this.userChannels = input.getChannelList();
+                            break;
+                        case "res-postMessage":
+                            // send a message
+                            break;
+                        case "res-addToChannel":
+                            // add a user to channel
+                            this.currentuser.addChannel(input.getChannel());
+                            break;
+                        case "res-removeFromChannel":
+                            // remove a user from the channel
+                            this.currentuser.delChannel(input.getChannel());
+                            break;
                     }
                 }
-            } catch (IOException | ClassNotFoundException e) {
-                input = null;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+
 
     }
 }
