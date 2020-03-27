@@ -6,16 +6,15 @@ import javafx.collections.ObservableList;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
 import java.util.ArrayList;
 import java.net.InetAddress;
+import java.util.Map;
+
 import javafx.collections.FXCollections;
 
 import javafx.application.Platform;
-
+import javafx.scene.image.Image;
 import util.Input;
-
-import javafx.stage.FileChooser;
 
 
 public class Client implements Runnable {
@@ -23,21 +22,24 @@ public class Client implements Runnable {
     public ObjectOutputStream outputStream;
     public Socket chatSocket;
     public ObjectInputStream inputStream;
-
-    private int port = 8080;
-    public InetAddress host = InetAddress.getLocalHost();
-    public ClientGUI clientGUI;
+    public int port;
+    public InetAddress host;
 
     public String username;
     public ObservableList<String> chatLog;
     public ObservableList<String> userList;
-    private ClientViewController controller;
+    public ClientViewController controller;
+    private Map<String, Image> imageCollection;
+    public ObservableList<Message> messages = FXCollections.observableArrayList();
 
 
-    public Client() throws IOException {
+    public Client(String host, int port) throws IOException {
+        this.port = port;
+        this.host = InetAddress.getByName(host);
         chatLog = FXCollections.observableArrayList();
         userList = FXCollections.observableArrayList();
         userList.add("initial test");
+        //clientGUI =
         initialize();
     }
 
@@ -66,16 +68,33 @@ public class Client implements Runnable {
         this.controller = controller;
     }
 
-    public void sendString(String message) throws IOException {
-        Input string = new Input();
-        string.setType(Input.inputType.TEXT);
-        string.setString(message);
-        outputStream.writeObject(string);
+    public void sendString(String message, String username, String usericon, String timestamp) throws IOException {
+        Input msg = new Input();
+        msg.setType(Input.inputType.TEXT);
+        msg.setString(message);
+        msg.setUser(username);
+        msg.setUserIcon(usericon);
+        msg.setTimestamp(timestamp);
+
+        outputStream.writeObject(msg);
         outputStream.flush();
         System.out.println("sent message");
     }
-    public void displayString(Input input){
-        Platform.runLater(() -> chatLog.add(input.getString()));
+    public void displayMessage(Input input){
+        String message = "["+input.getTimestamp()+"]"+input.getUsername()+": "+input.getString();
+        System.out.println(message);
+        System.out.println(input.getUserIcon());
+
+        Platform.runLater(() -> {
+                    try {
+                        messages.add(
+                                new Message(message, input.getUserIcon())
+                                );
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
     }
 
     //assumes utf-8 encoding, size<16mb
@@ -139,7 +158,7 @@ public class Client implements Runnable {
                 if(input!=null) {
                     switch (input.getType()) {
                         case TEXT:
-                            displayString(input);
+                            displayMessage(input);
                             break;
                         case USERLIST:
                             System.out.println("hello why is this running");
@@ -167,4 +186,3 @@ public class Client implements Runnable {
 
     }
 }
-

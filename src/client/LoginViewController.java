@@ -98,6 +98,7 @@ public class LoginViewController implements Initializable {
         //load fxml
         this.stage = (Stage) btLogin.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("ClientView.fxml"));
+        System.out.println("fxml loaded");
         Parent root = loader.load();
         //initialize controller
         ClientViewController controller = (ClientViewController) loader.getController();
@@ -105,6 +106,7 @@ public class LoginViewController implements Initializable {
         controller.setChatView();
         controller.setUsername(usernameField.getText());
         controller.setUserIcon(userIcon);
+        controller.setSocket(port, host);
         client.setController(controller);
         System.out.println("log");
         stage.setMinWidth(1080);
@@ -122,6 +124,9 @@ public class LoginViewController implements Initializable {
         rt.play();
         //default icon
         this.userIcon = System.getProperty("user.dir") + "/src/client/images/logo.png";
+        try{Image image = new Image(new FileInputStream(userIcon));
+            iconView.setImage(image);}
+        catch(FileNotFoundException e){System.out.println("error loading icon");}
         //read defaults from config.txt if it exits
         FileReader reader = null;
         try {

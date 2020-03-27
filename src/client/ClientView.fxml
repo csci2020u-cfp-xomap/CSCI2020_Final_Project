@@ -17,7 +17,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="         -fx-background-size: 1200 900;         -fx-background-radius: 30;         -fx-border-radius: 30;         -fx-border-width:5;         -fx-background-color:#eef0ee; " fx:controller = "client.ClientViewController" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="         -fx-background-size: 1200 900;         -fx-background-radius: 30;         -fx-border-radius: 30;         -fx-border-width:5;         -fx-background-color:#eef0ee; " xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ClientViewController">
    <top>
       <VBox prefHeight="54.0" prefWidth="800.0" BorderPane.alignment="CENTER">
          <children>
@@ -27,7 +27,7 @@
               <menus>
                 <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
                   <items>
-                        <MenuItem fx:id="btAddFile" mnemonicParsing="false" text="Send File..." />
+                        <MenuItem fx:id="btAddFile" mnemonicParsing="false" onAction="#btSendFile" text="Send File..." />
                         <MenuItem fx:id="btAddImage" mnemonicParsing="false" text="Send Image..." />
                         <MenuItem fx:id="btSaveChat" mnemonicParsing="false" text="Save chatlog" />
                     <MenuItem fx:id="btLogout" mnemonicParsing="false" onAction="#logout" text="logout..." />
@@ -107,7 +107,7 @@
                               <Circle fx:id="statusIndicator" fill="#ffaa55" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
                            </children>
                         </HBox>
-                        <TextField fx:id="statusField" prefHeight="34.0" prefWidth="96.0" promptText="set status" style="-fx-background-color: #FFF0F5;">
+                        <TextField fx:id="statusField" onAction="#setStatus" prefHeight="34.0" prefWidth="96.0" promptText="set status" style="-fx-background-color: #FFF0F5;">
                            <font>
                               <Font size="10.0" />
                            </font>
@@ -140,7 +140,12 @@
                   <Font size="8.0" />
                </font>
             </Label>
-            <Label prefHeight="12.0" prefWidth="164.0" text="hostname, port">
+            <Label fx:id="hostnameLabel" alignment="CENTER_RIGHT" prefHeight="12.0" prefWidth="70.0" text="hostname">
+               <font>
+                  <Font size="8.0" />
+               </font>
+            </Label>
+            <Label fx:id="portLabel" prefHeight="12.0" prefWidth="72.0" text="port">
                <font>
                   <Font size="8.0" />
                </font>

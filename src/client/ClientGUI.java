@@ -29,7 +29,6 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.Socket;
 
-
 public class ClientGUI extends Application {
 
     private static Stage primaryStage;
@@ -53,7 +52,9 @@ public class ClientGUI extends Application {
 
         System.out.println("loading fxml");
         FXMLLoader loader = new FXMLLoader(getClass().getResource("LoginView.fxml"));
+        System.out.println("fxml loaded");
         Parent root = loader.load();
+
 
         primaryStage.setTitle("chatter/v1-1");
         primaryStage.setResizable(false);
